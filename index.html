@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>韩立的修仙历练簿</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;500;700;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body data-bg="tiannan">
+
+  <!-- ── 背景层 ── -->
+  <div class="bg-layer">
+    <div class="bg-mountains"></div>
+    <div class="bg-particles" id="particles"></div>
+    <div class="bg-vignette"></div>
+  </div>
+
+  <!-- ── 顶部导航 ── -->
+  <header class="header">
+    <div class="header-left">
+      <div class="avatar">韩</div>
+      <div class="brand">
+        <span class="brand-title">凡人修仙传</span>
+        <span class="brand-sub">A Record of a Mortal's Journey</span>
+      </div>
+    </div>
+
+    <div class="header-center">
+      <h1 class="site-title">韩立的修仙历练簿</h1>
+      <div class="title-brush"></div>
+    </div>
+
+    <div class="header-right">
+      <div class="cultivation-block">
+        <span class="realm-badge" id="headerRealm">炼气修士</span>
+        <div class="cult-bar-wrap">
+          <div class="cult-bar" id="cultBar" style="width:0%"></div>
+        </div>
+        <span class="cult-num" id="cultNum">修为 0</span>
+      </div>
+      <div class="spirit-block">
+        <span class="spirit-icon">◈</span>
+        <span class="spirit-num" id="spiritNum">0</span>
+        <span class="spirit-label">灵石</span>
+      </div>
+      <button class="icon-btn" id="settingsBtn" title="设置">⚙</button>
+    </div>
+  </header>
+
+  <!-- ── 设置面板 ── -->
+  <div class="settings-panel" id="settingsPanel">
+    <div class="settings-inner">
+      <h3 class="settings-title">修炼设置</h3>
+      <div class="settings-group">
+        <label class="settings-label">背景主题</label>
+        <div class="bg-switch">
+          <button class="bg-opt active" data-bg="tiannan">天南大陆</button>
+          <button class="bg-opt" data-bg="luanxinghai">乱星海</button>
+          <button class="bg-opt" data-bg="luoyun">落云宗</button>
+        </div>
+      </div>
+      <div class="settings-group">
+        <label class="settings-label">重置修为</label>
+        <button class="danger-btn" id="resetCultBtn">清空修为</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── 主体布局 ── -->
+  <div class="layout">
+
+    <!-- 左侧侧边栏 -->
+    <aside class="sidebar">
+
+      <section class="sb-section">
+        <h3 class="sb-heading">
+          <span class="sb-deco">✦</span> 修仙境界 <span class="sb-deco">✦</span>
+        </h3>
+        <ul class="realm-list" id="realmList">
+          <li class="realm-item active" data-realm="all">
+            <span class="realm-dot" style="background:#E8D7B8"></span>
+            <span class="realm-name">全部历练</span>
+            <span class="realm-cnt" id="cnt-all">0</span>
+          </li>
+          <!-- JS 填充 -->
+        </ul>
+      </section>
+
+      <section class="sb-section">
+        <h3 class="sb-heading">
+          <span class="sb-deco">✦</span> 任务品级 <span class="sb-deco">✦</span>
+        </h3>
+        <div class="grade-group" id="gradeFilters">
+          <button class="grade-btn active" data-grade="all">全部</button>
+          <!-- JS 填充 -->
+        </div>
+      </section>
+
+      <section class="sb-section">
+        <button class="add-btn" id="addTaskBtn">
+          <span class="add-btn-icon">符</span>
+          <span class="add-btn-text">开立任务符</span>
+        </button>
+      </section>
+
+      <div class="sb-stats">
+        <div class="stat">
+          <span class="stat-n" id="statTotal">0</span>
+          <span class="stat-l">总历练</span>
+        </div>
+        <div class="stat-div"></div>
+        <div class="stat">
+          <span class="stat-n" id="statDone">0</span>
+          <span class="stat-l">已完成</span>
+        </div>
+        <div class="stat-div"></div>
+        <div class="stat">
+          <span class="stat-n" id="statLeft">0</span>
+          <span class="stat-l">进行中</span>
+        </div>
+      </div>
+
+    </aside>
+
+    <!-- 主内容区 -->
+    <main class="main">
+      <div class="main-header">
+        <h2 class="main-title" id="mainTitle">全部历练</h2>
+        <div class="view-filter">
+          <button class="vf-btn active" data-view="all">全部</button>
+          <button class="vf-btn" data-view="active">进行中</button>
+          <button class="vf-btn" data-view="done">已完成</button>
+        </div>
+      </div>
+
+      <div class="task-list" id="taskList"></div>
+
+      <div class="empty-state" id="emptyState" hidden>
+        <div class="empty-scroll">📜</div>
+        <p class="empty-title">暂无历练任务</p>
+        <p class="empty-hint">可于此处闭关修行，蓄力待发</p>
+        <p class="empty-quote">「低调发育，苟道永恒」</p>
+      </div>
+    </main>
+
+  </div>
+
+  <!-- ── 底部页脚 ── -->
+  <footer class="footer">
+    <button class="quote-btn" id="quoteBtn" title="换一条语录">↺</button>
+    <div class="quote-wrap">
+      <span class="q-mark">「</span>
+      <span class="quote-text" id="quoteText">修仙之道，步步为营，切勿急于求成。</span>
+      <span class="q-mark">」</span>
+      <span class="q-src">—— 韩立</span>
+    </div>
+    <p class="footer-copy">凡人修仙传 · 待办历练簿 · 苟道第一人</p>
+  </footer>
+
+  <!-- ── 新增 / 编辑弹窗 ── -->
+  <div class="modal-overlay" id="modalOverlay" hidden>
+    <div class="modal" id="modal">
+      <div class="modal-hd">
+        <h3 class="modal-title" id="modalTitle">立此历练符</h3>
+        <button class="modal-x" id="modalClose">✕</button>
+      </div>
+      <div class="modal-bd">
+        <div class="field">
+          <label class="field-label">历练内容</label>
+          <input class="field-input" id="taskInput" type="text"
+                 placeholder="请输入修仙任务…" maxlength="100" autocomplete="off" />
+        </div>
+        <div class="field">
+          <label class="field-label">修仙境界</label>
+          <div class="chip-row" id="realmChips"></div>
+        </div>
+        <div class="field">
+          <label class="field-label">任务品级</label>
+          <div class="chip-row" id="gradeChips"></div>
+        </div>
+      </div>
+      <div class="modal-ft">
+        <button class="cancel-btn" id="modalCancel">取消历练</button>
+        <button class="submit-btn" id="modalSubmit">立此为证</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── 突破境界通知 ── -->
+  <div class="breakthrough-overlay" id="btOverlay" hidden>
+    <div class="breakthrough-box">
+      <div class="bt-spark">⚡</div>
+      <div class="bt-title" id="btTitle">突破成功！</div>
+      <div class="bt-text" id="btText">恭喜韩立突破境界！</div>
+      <button class="bt-close" id="btClose">继续修炼</button>
+    </div>
+  </div>
+
+  <!-- ── 提示 Toast ── -->
+  <div class="toast" id="toast"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
