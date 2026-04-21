@@ -10,15 +10,12 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body data-bg="tiannan">
-
-  <!-- ── 背景层 ── -->
   <div class="bg-layer">
     <div class="bg-mountains"></div>
     <div class="bg-particles" id="particles"></div>
     <div class="bg-vignette"></div>
   </div>
 
-  <!-- ── 顶部导航 ── -->
   <header class="header">
     <div class="header-left">
       <div class="avatar">韩</div>
@@ -26,6 +23,7 @@
         <span class="brand-title">凡人修仙传</span>
         <span class="brand-sub">A Record of a Mortal's Journey</span>
       </div>
+      <span class="realm-badge" id="highestBadge">无徽章</span>
     </div>
 
     <div class="header-center">
@@ -35,11 +33,9 @@
 
     <div class="header-right">
       <div class="cultivation-block">
-        <span class="realm-badge" id="headerRealm">炼气修士</span>
-        <div class="cult-bar-wrap">
-          <div class="cult-bar" id="cultBar" style="width:0%"></div>
-        </div>
-        <span class="cult-num" id="cultNum">修为 0</span>
+        <span class="realm-badge" id="focusLevel">炼气期专注</span>
+        <div class="cult-bar-wrap"><div class="cult-bar" id="focusBar" style="width:0%"></div></div>
+        <span class="cult-num" id="focusMinutesToday">当日专注 0 分钟</span>
       </div>
       <div class="spirit-block">
         <span class="spirit-icon">◈</span>
@@ -50,7 +46,6 @@
     </div>
   </header>
 
-  <!-- ── 设置面板 ── -->
   <div class="settings-panel" id="settingsPanel">
     <div class="settings-inner">
       <h3 class="settings-title">修炼设置</h3>
@@ -63,105 +58,73 @@
         </div>
       </div>
       <div class="settings-group">
-        <label class="settings-label">重置修为</label>
-        <button class="danger-btn" id="resetCultBtn">清空修为</button>
+        <label class="settings-label">番茄钟配置（10-60 分钟）</label>
+        <input class="field-input" id="pomoMinutesInput" type="number" min="10" max="60" />
+      </div>
+      <div class="settings-group">
+        <label class="settings-label">专注提醒音</label>
+        <select class="field-input" id="pomoSoundSelect">
+          <option value="sword">剑鸣</option>
+          <option value="talisman">符箓燃烧</option>
+        </select>
+      </div>
+      <div class="settings-group">
+        <label class="settings-label">机缘触发提醒</label>
+        <button class="bg-opt" id="toggleChanceReminder">已开启</button>
       </div>
     </div>
   </div>
 
-  <!-- ── 主体布局 ── -->
   <div class="layout">
-
-    <!-- 左侧侧边栏 -->
     <aside class="sidebar">
-
-      <section class="sb-section">
-        <h3 class="sb-heading">
-          <span class="sb-deco">✦</span> 修仙境界 <span class="sb-deco">✦</span>
-        </h3>
-        <ul class="realm-list" id="realmList">
-          <li class="realm-item active" data-realm="all">
-            <span class="realm-dot" style="background:#E8D7B8"></span>
-            <span class="realm-name">全部历练</span>
-            <span class="realm-cnt" id="cnt-all">0</span>
-          </li>
-          <!-- JS 填充 -->
-        </ul>
-      </section>
-
-      <section class="sb-section">
-        <h3 class="sb-heading">
-          <span class="sb-deco">✦</span> 任务品级 <span class="sb-deco">✦</span>
-        </h3>
-        <div class="grade-group" id="gradeFilters">
-          <button class="grade-btn active" data-grade="all">全部</button>
-          <!-- JS 填充 -->
-        </div>
-      </section>
-
       <section class="sb-section">
         <button class="add-btn" id="addTaskBtn">
           <span class="add-btn-icon">符</span>
-          <span class="add-btn-text">开立任务符</span>
+          <span class="add-btn-text">新增历练任务</span>
         </button>
       </section>
 
       <section class="sb-section">
-        <div class="pomodoro-card">
-          <h3 class="pomodoro-title">番茄修炼钟</h3>
-          <p class="pomodoro-phase" id="pomoPhase">专注修炼</p>
-          <p class="pomodoro-timer" id="pomoTimer">25:00</p>
-          <p class="pomodoro-cycle" id="pomoCycle">本轮已完成 0/4 个专注钟</p>
-          <div class="pomodoro-actions">
-            <button class="pomodoro-btn primary" id="pomoStartBtn">开始</button>
-            <button class="pomodoro-btn" id="pomoResetBtn">重置</button>
-          </div>
+        <h3 class="sb-heading"><span class="sb-deco">✦</span> 我的修炼日志 <span class="sb-deco">✦</span></h3>
+        <div id="logPanel" class="log-panel"></div>
+      </section>
+
+      <section class="sb-section">
+        <h3 class="sb-heading"><span class="sb-deco">✦</span> 修仙宝库 <span class="sb-deco">✦</span></h3>
+        <div class="treasury-card">
+          <p>机缘令牌：<span id="tokenNum">0</span></p>
+          <button class="pomodoro-btn primary" id="exchangeTokenBtn">100 灵石兑换 1 枚</button>
+          <button class="pomodoro-btn" id="triggerChanceBtn">消耗令牌触发机缘</button>
+          <p class="small-text" id="activeBuffText">当前无机缘 buff</p>
         </div>
       </section>
 
-      <div class="sb-stats">
-        <div class="stat">
-          <span class="stat-n" id="statTotal">0</span>
-          <span class="stat-l">总历练</span>
-        </div>
-        <div class="stat-div"></div>
-        <div class="stat">
-          <span class="stat-n" id="statDone">0</span>
-          <span class="stat-l">已完成</span>
-        </div>
-        <div class="stat-div"></div>
-        <div class="stat">
-          <span class="stat-n" id="statLeft">0</span>
-          <span class="stat-l">进行中</span>
-        </div>
-      </div>
-
+      <section class="sb-section">
+        <h3 class="sb-heading"><span class="sb-deco">✦</span> 徽章系统 <span class="sb-deco">✦</span></h3>
+        <div id="badgePanel" class="badge-panel"></div>
+      </section>
     </aside>
 
-    <!-- 主内容区 -->
     <main class="main">
       <div class="main-header">
-        <h2 class="main-title" id="mainTitle">全部历练</h2>
-        <div class="view-filter">
-          <button class="vf-btn active" data-view="all">全部</button>
-          <button class="vf-btn" data-view="active">进行中</button>
-          <button class="vf-btn" data-view="done">已完成</button>
-        </div>
+        <h2 class="main-title">历练任务</h2>
       </div>
 
       <div class="task-list" id="taskList"></div>
-
+      <p class="small-text">提示：若存在多个“进行中”且绑定番茄钟的任务，每次番茄钟优先累计最早进入进行中的任务。</p>
       <div class="empty-state" id="emptyState" hidden>
         <div class="empty-scroll">📜</div>
         <p class="empty-title">暂无历练任务</p>
-        <p class="empty-hint">可于此处闭关修行，蓄力待发</p>
-        <p class="empty-quote">「低调发育，苟道永恒」</p>
+        <p class="empty-hint">低调积累，步步为营</p>
       </div>
-    </main>
 
+      <section class="timeline-section">
+        <h3 class="main-title">韩立的修仙机缘时间线</h3>
+        <div id="timelineList" class="timeline-list"></div>
+      </section>
+    </main>
   </div>
 
-  <!-- ── 底部页脚 ── -->
   <footer class="footer">
     <button class="quote-btn" id="quoteBtn" title="换一条语录">↺</button>
     <div class="quote-wrap">
@@ -173,47 +136,54 @@
     <p class="footer-copy">凡人修仙传 · 待办历练簿 · 苟道第一人</p>
   </footer>
 
-  <!-- ── 新增 / 编辑弹窗 ── -->
   <div class="modal-overlay" id="modalOverlay" hidden>
     <div class="modal" id="modal">
       <div class="modal-hd">
-        <h3 class="modal-title" id="modalTitle">立此历练符</h3>
+        <h3 class="modal-title" id="modalTitle">新增历练任务</h3>
         <button class="modal-x" id="modalClose">✕</button>
       </div>
       <div class="modal-bd">
         <div class="field">
           <label class="field-label">历练内容</label>
-          <input class="field-input" id="taskInput" type="text"
-                 placeholder="请输入修仙任务…" maxlength="100" autocomplete="off" />
+          <input class="field-input" id="taskInput" type="text" placeholder="请输入修仙任务…" maxlength="100" autocomplete="off" />
         </div>
         <div class="field">
-          <label class="field-label">修仙境界</label>
-          <div class="chip-row" id="realmChips"></div>
+          <label class="field-label">绑定番茄钟</label>
+          <select class="field-input" id="bindTypeSelect">
+            <option value="none">不绑定</option>
+            <option value="one">1 个番茄钟</option>
+            <option value="custom">自定义时长</option>
+          </select>
         </div>
-        <div class="field">
-          <label class="field-label">任务品级</label>
-          <div class="chip-row" id="gradeChips"></div>
+        <div class="field" id="customMinutesWrap" hidden>
+          <label class="field-label">自定义绑定时长（分钟）</label>
+          <input class="field-input" id="customMinutesInput" type="number" min="10" max="600" value="50" />
         </div>
       </div>
       <div class="modal-ft">
-        <button class="cancel-btn" id="modalCancel">取消历练</button>
-        <button class="submit-btn" id="modalSubmit">立此为证</button>
+        <button class="cancel-btn" id="modalCancel">取消</button>
+        <button class="submit-btn" id="modalSubmit">保存任务</button>
       </div>
     </div>
   </div>
 
-  <!-- ── 突破境界通知 ── -->
-  <div class="breakthrough-overlay" id="btOverlay" hidden>
-    <div class="breakthrough-box">
-      <div class="bt-spark">⚡</div>
-      <div class="bt-title" id="btTitle">突破成功！</div>
-      <div class="bt-text" id="btText">恭喜韩立突破境界！</div>
-      <button class="bt-close" id="btClose">继续修炼</button>
-    </div>
+  <div class="task-menu" id="taskMenu" hidden>
+    <button id="menuEditBtn">编辑任务</button>
+    <button id="menuDeleteBtn">删除任务</button>
   </div>
 
-  <!-- ── 提示 Toast ── -->
   <div class="toast" id="toast"></div>
+
+  <div class="floating-pomodoro" id="floatingPomodoro">
+    <div class="pomodoro-title">🫙 闭关专注</div>
+    <div class="pomodoro-phase" id="pomoPhase">专注修炼</div>
+    <div class="pomodoro-timer" id="pomoTimer">00:00</div>
+    <div class="pomodoro-cycle" id="pomoInfo">当前 0 / 剩余 0 分钟</div>
+    <div class="pomodoro-actions">
+      <button class="pomodoro-btn primary" id="pomoStartBtn">开始</button>
+      <button class="pomodoro-btn" id="pomoResetBtn">重置</button>
+    </div>
+  </div>
 
   <script src="app.js"></script>
 </body>
