@@ -94,6 +94,7 @@ const dom = {
 };
 
 const STORAGE_KEY = 'hanli_xiuxian_idle_v2';
+const DEFAULT_FOCUS_MINUTES = 25;
 const MIN_FOCUS_MINUTES = 10;
 const MAX_FOCUS_MINUTES = 60;
 const MAX_CUSTOM_BIND_MINUTES = 600;
@@ -110,7 +111,7 @@ let state = {
   badges: {},
   logs: {},
   lastSettleDate: '',
-  focusMinutes: 25,
+  focusMinutes: DEFAULT_FOCUS_MINUTES,
   reminderSound: 'sword',
   chanceReminder: true,
   chance: {
@@ -126,7 +127,7 @@ let state = {
   quoteIndex: 0,
   bg: 'tiannan',
   pomodoro: {
-    secondsLeft: 25 * 60,
+    secondsLeft: DEFAULT_FOCUS_MINUTES * 60,
     running: false
   },
   editingId: null,
@@ -470,7 +471,7 @@ function submitTask() {
     if (!task) return;
     task.title = title;
     task.bindMinutes = bindMinutes;
-    task.progressMinutes = Math.min(task.progressMinutes, bindMinutes || task.progressMinutes);
+    task.progressMinutes = bindMinutes ? Math.min(task.progressMinutes, bindMinutes) : 0;
   } else {
     state.tasks.unshift({
       id: Date.now().toString(36) + Math.random().toString(36).slice(2),
@@ -601,6 +602,7 @@ function triggerChance() {
   const pool = [
     () => {
       state.chance.shijinFragment += 1;
+      state.chance.shijinFragment = Math.min(3, state.chance.shijinFragment);
       if (state.chance.shijinFragment >= 3) state.chance.shijinUnlocked = true;
       return `获得噬金虫幼虫碎片 x1（${state.chance.shijinFragment}/3）`;
     },
@@ -618,6 +620,7 @@ function triggerChance() {
     },
     () => {
       state.chance.changchunFragment += 1;
+      state.chance.changchunFragment = Math.min(5, state.chance.changchunFragment);
       if (state.chance.changchunFragment >= 5) state.chance.changchunUnlocked = true;
       return `获得长春功碎片 x1（${state.chance.changchunFragment}/5）`;
     },
@@ -702,7 +705,7 @@ function initEvents() {
   });
 
   dom.pomoMinutesInput.addEventListener('change', () => {
-    const val = Math.max(MIN_FOCUS_MINUTES, Math.min(MAX_FOCUS_MINUTES, Number(dom.pomoMinutesInput.value || 25)));
+    const val = Math.max(MIN_FOCUS_MINUTES, Math.min(MAX_FOCUS_MINUTES, Number(dom.pomoMinutesInput.value || DEFAULT_FOCUS_MINUTES)));
     state.focusMinutes = val;
     if (!state.pomodoro.running) state.pomodoro.secondsLeft = val * 60;
     saveAndRender();
