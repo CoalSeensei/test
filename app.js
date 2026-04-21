@@ -94,6 +94,14 @@ const dom = {
 };
 
 const STORAGE_KEY = 'hanli_xiuxian_idle_v2';
+const MIN_FOCUS_MINUTES = 10;
+const MAX_FOCUS_MINUTES = 60;
+const MAX_CUSTOM_BIND_MINUTES = 600;
+const PROGRESS_BAR_CAP_MINUTES = 120;
+const DAY_MS = 24 * 60 * 60 * 1000;
+const HOUR_MS = 60 * 60 * 1000;
+const MAX_BUFF_DURATION_MS = 30 * 24 * 60 * 60 * 1000;
+const LONG_PRESS_DURATION_MS = 520;
 
 let state = {
   tasks: [],
@@ -151,9 +159,9 @@ function ensureLog(dateKey) {
 
 function getFocusLevelByMinutes(minutes, dateKey) {
   let idx = 0;
-  if (minutes >= 31 && minutes <= 60) idx = 1;
-  else if (minutes >= 61 && minutes <= 120) idx = 2;
-  else if (minutes > 120) idx = 3;
+  if (minutes >= 121) idx = 3;
+  else if (minutes >= 61) idx = 2;
+  else if (minutes >= 31) idx = 1;
   if (state.chance.levelBoostDate === dateKey) idx = Math.min(3, idx + 1);
   return FOCUS_LEVELS[idx];
 }
@@ -167,7 +175,10 @@ function getTokenCost() {
 }
 
 function isBuffActive(until) {
-  return typeof until === 'number' && until > Date.now();
+  if (typeof until !== 'number') return false;
+  const now = Date.now();
+  const maxFuture = now + MAX_BUFF_DURATION_MS;
+  return until > now && until <= maxFuture;
 }
 
 function rewardMultiplier() {
@@ -239,8 +250,10 @@ function settleDayIfNeeded() {
     ensureLog(today);
     return;
   }
-  let cursor = state.lastSettleDate;
-  while (cursor < today) {
+  let cursorDate = new Date(state.lastSettleDate + 'T00:00:00');
+  const todayDate = new Date(today + 'T00:00:00');
+  while (cursorDate < todayDate) {
+    const cursor = todayStr(cursorDate);
     const log = ensureLog(cursor);
     if (!log.settled) {
       const level = getFocusLevelByMinutes(log.minutes, cursor);
@@ -250,8 +263,8 @@ function settleDayIfNeeded() {
       log.settledBonus = bonus;
       state.stones += bonus;
     }
-    cursor = addDays(cursor, 1);
-    ensureLog(cursor);
+    cursorDate.setDate(cursorDate.getDate() + 1);
+    ensureLog(todayStr(cursorDate));
   }
   state.lastSettleDate = today;
 }
@@ -292,7 +305,7 @@ function renderHeader() {
   const level = getFocusLevelByMinutes(minutes, todayStr());
   dom.focusLevel.textContent = level.name;
   dom.focusMinutesToday.textContent = `当日专注 ${minutes} 分钟`;
-  dom.focusBar.style.width = `${Math.min(100, Math.round((minutes / 120) * 100))}%`;
+  dom.focusBar.style.width = `${Math.min(100, Math.round((minutes / PROGRESS_BAR_CAP_MINUTES) * 100))}%`;
   dom.spiritNum.textContent = state.stones;
   dom.tokenNum.textContent = state.tokens;
   const highest = getHighestBadge();
@@ -445,7 +458,7 @@ function getBindMinutesBySelection() {
   if (dom.bindTypeSelect.value === 'none') return 0;
   if (dom.bindTypeSelect.value === 'one') return state.focusMinutes;
   const custom = Number(dom.customMinutesInput.value || 0);
-  return Math.min(600, Math.max(10, custom));
+  return Math.min(MAX_CUSTOM_BIND_MINUTES, Math.max(MIN_FOCUS_MINUTES, custom));
 }
 
 function submitTask() {
@@ -507,7 +520,7 @@ function startLongPress(taskId, x, y) {
     dom.taskMenu.style.left = `${x}px`;
     dom.taskMenu.style.top = `${y}px`;
     dom.taskMenu.hidden = false;
-  }, 520);
+  }, LONG_PRESS_DURATION_MS);
 }
 
 function stopLongPress() {
@@ -592,15 +605,15 @@ function triggerChance() {
       return `获得噬金虫幼虫碎片 x1（${state.chance.shijinFragment}/3）`;
     },
     () => {
-      state.chance.silverMoonUntil = now + 24 * 60 * 60 * 1000;
+      state.chance.silverMoonUntil = now + DAY_MS;
       return '银月器灵体验卡生效 24 小时';
     },
     () => {
-      state.chance.rewardBoostUntil = now + 24 * 60 * 60 * 1000;
+      state.chance.rewardBoostUntil = now + DAY_MS;
       return '青竹蜂云剑体验卡生效 24 小时（灵石 +20%）';
     },
     () => {
-      state.chance.doubleFocusUntil = now + 60 * 60 * 1000;
+      state.chance.doubleFocusUntil = now + HOUR_MS;
       return '掌天瓶 buff 生效 1 小时（专注时长翻倍）';
     },
     () => {
@@ -689,11 +702,11 @@ function initEvents() {
   });
 
   dom.pomoMinutesInput.addEventListener('change', () => {
-    const val = Math.max(10, Math.min(60, Number(dom.pomoMinutesInput.value || 25)));
+    const val = Math.max(MIN_FOCUS_MINUTES, Math.min(MAX_FOCUS_MINUTES, Number(dom.pomoMinutesInput.value || 25)));
     state.focusMinutes = val;
     if (!state.pomodoro.running) state.pomodoro.secondsLeft = val * 60;
     saveAndRender();
-    showToast('番茄钟时长已更新并即时生效');
+    showToast(state.pomodoro.running ? '番茄钟时长已更新，将在下次开始时生效' : '番茄钟时长已更新并生效');
   });
 
   dom.pomoSoundSelect.addEventListener('change', () => {
