@@ -566,6 +566,7 @@ function showToast(msg) {
 // ── 番茄钟 ─────────────────────────────────────────────────
 
 let pomodoroTimer = null;
+let breakQuoteTimer = null;
 
 function formatSeconds(total) {
   const sec = Math.max(0, total);
@@ -590,7 +591,9 @@ function renderPomodoro() {
 function requestNotifyPermission() {
   if (!('Notification' in window)) return;
   if (Notification.permission !== 'default') return;
-  Notification.requestPermission().catch(() => {});
+  Notification.requestPermission().catch(() => {
+    // 用户或浏览器策略可能拒绝权限，此处静默处理即可。
+  });
 }
 
 function pushBreakReminder(isLongBreak) {
@@ -599,7 +602,8 @@ function pushBreakReminder(isLongBreak) {
   const msg = `${breakTitle}：记得喝水并放松一下。${quote}`;
   showToast(msg);
   dom.quoteText.style.opacity = '0';
-  setTimeout(() => {
+  clearTimeout(breakQuoteTimer);
+  breakQuoteTimer = setTimeout(() => {
     dom.quoteText.textContent = quote;
     dom.quoteText.style.opacity = '1';
   }, 220);
