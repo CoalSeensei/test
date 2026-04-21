@@ -2,9 +2,17 @@
 
 ## 在线预览
 
-本项目通过 GitHub Pages 自动部署，每次推送到 `main` 分支后约 1 分钟内页面自动更新。
+本项目通过 GitHub Pages 自动部署，每次推送后约 1 分钟内页面自动更新。
 
-预览地址：**https://coalseensei.github.io/test/**
+👉 **[点击打开在线页面](https://coalseensei.github.io/test/)**
+
+---
+
+## 页面截图
+
+[![页面预览](preview.png)](https://coalseensei.github.io/test/)
+
+---
 
 ## 本地运行
 
