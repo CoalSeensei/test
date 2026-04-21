@@ -378,6 +378,62 @@ input { font-family: inherit; }
   border: 1px solid rgba(212,184,135,0.3);
 }
 
+/* 番茄钟 */
+.pomodoro-card {
+  border: 1px solid rgba(212,184,135,0.25);
+  border-radius: var(--radius-lg);
+  background: linear-gradient(180deg, rgba(212,184,135,0.1), rgba(212,184,135,0.04));
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.pomodoro-title {
+  font-size: 12px;
+  color: var(--accent);
+  letter-spacing: 2px;
+  text-align: center;
+}
+.pomodoro-phase {
+  font-size: 12px;
+  color: var(--text-dim);
+  text-align: center;
+}
+.pomodoro-timer {
+  font-size: 28px;
+  line-height: 1;
+  color: var(--text);
+  text-align: center;
+  font-weight: 700;
+}
+.pomodoro-cycle {
+  font-size: 11px;
+  color: var(--text-faint);
+  text-align: center;
+}
+.pomodoro-actions {
+  display: flex;
+  gap: 8px;
+}
+.pomodoro-btn {
+  flex: 1;
+  padding: 6px 8px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  font-size: 12px;
+  transition: var(--transition);
+}
+.pomodoro-btn:hover {
+  color: var(--text);
+  border-color: var(--accent);
+}
+.pomodoro-btn.primary {
+  color: var(--accent);
+  border-color: rgba(212,184,135,0.45);
+  background: rgba(212,184,135,0.12);
+}
+
 /* 统计 */
 .sb-stats {
   display: flex; align-items: center; justify-content: space-around;

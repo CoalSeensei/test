@@ -69,6 +69,22 @@ const QUOTES = [
   '一切皆有因果，莫强求，莫强争。',
 ];
 
+const POMODORO = {
+  focus: 25 * 60,
+  shortBreak: 5 * 60,
+  longBreak: 20 * 60,
+  cycleLength: 4,
+};
+
+const BREAK_QUOTES = [
+  '稳住节奏，你已经比昨天更强了。',
+  '喝口水，缓一缓，继续就是胜利。',
+  '一步一印，慢就是快。',
+  '你在认真修炼的每一分钟都算数。',
+  '别急，继续专注就会有突破。',
+  '今天的坚持，会变成明天的底气。',
+];
+
 // ── 状态 ──────────────────────────────────────────────────
 
 let state = {
@@ -82,6 +98,12 @@ let state = {
   editingId:     null,
   quoteIndex:    0,
   bg:            'tiannan',
+  pomodoro: {
+    phase: 'focus', // focus | shortBreak | longBreak
+    secondsLeft: POMODORO.focus,
+    running: false,
+    focusDoneInCycle: 0,
+  },
 };
 
 // ── DOM 引用 ──────────────────────────────────────────────
@@ -134,6 +156,13 @@ const dom = {
   // toast
   toast:           $('toast'),
 
+  // pomodoro
+  pomoPhase:       $('pomoPhase'),
+  pomoTimer:       $('pomoTimer'),
+  pomoCycle:       $('pomoCycle'),
+  pomoStartBtn:    $('pomoStartBtn'),
+  pomoResetBtn:    $('pomoResetBtn'),
+
   // view filter
   vfBtns:          document.querySelectorAll('.vf-btn'),
 
@@ -149,6 +178,7 @@ function save() {
     spiritStones: state.spiritStones,
     bg:           state.bg,
     quoteIndex:   state.quoteIndex,
+    pomodoro:     state.pomodoro,
   }));
 }
 
@@ -162,6 +192,20 @@ function load() {
     if (saved.spiritStones)state.spiritStones = saved.spiritStones;
     if (saved.bg)          state.bg           = saved.bg;
     if (saved.quoteIndex)  state.quoteIndex   = saved.quoteIndex;
+    if (saved.pomodoro && typeof saved.pomodoro === 'object') {
+      if (typeof saved.pomodoro.phase === 'string') {
+        state.pomodoro.phase = saved.pomodoro.phase;
+      }
+      if (typeof saved.pomodoro.secondsLeft === 'number' && saved.pomodoro.secondsLeft >= 0) {
+        state.pomodoro.secondsLeft = saved.pomodoro.secondsLeft;
+      }
+      if (typeof saved.pomodoro.focusDoneInCycle === 'number' &&
+          saved.pomodoro.focusDoneInCycle >= 0 &&
+          saved.pomodoro.focusDoneInCycle <= POMODORO.cycleLength) {
+        state.pomodoro.focusDoneInCycle = saved.pomodoro.focusDoneInCycle;
+      }
+    }
+    state.pomodoro.running = false;
   } catch (_) { /* ignore */ }
 }
 
@@ -519,6 +563,126 @@ function showToast(msg) {
   toastTimer = setTimeout(() => dom.toast.classList.remove('show'), 2500);
 }
 
+// ── 番茄钟 ─────────────────────────────────────────────────
+
+let pomodoroTimer = null;
+let breakQuoteTimer = null;
+
+function formatSeconds(total) {
+  const sec = Math.max(0, total);
+  const mm = String(Math.floor(sec / 60)).padStart(2, '0');
+  const ss = String(sec % 60).padStart(2, '0');
+  return `${mm}:${ss}`;
+}
+
+function pomodoroPhaseLabel(phase) {
+  if (phase === 'shortBreak') return '短休息';
+  if (phase === 'longBreak')  return '大休息';
+  return '专注修炼';
+}
+
+function renderPomodoro() {
+  dom.pomoPhase.textContent = pomodoroPhaseLabel(state.pomodoro.phase);
+  dom.pomoTimer.textContent = formatSeconds(state.pomodoro.secondsLeft);
+  dom.pomoCycle.textContent = `本轮已完成 ${state.pomodoro.focusDoneInCycle}/${POMODORO.cycleLength} 个专注钟`;
+  dom.pomoStartBtn.textContent = state.pomodoro.running ? '暂停' : '开始';
+}
+
+function requestNotifyPermission() {
+  if (!('Notification' in window)) return;
+  if (Notification.permission !== 'default') return;
+  Notification.requestPermission().catch(() => {
+    // 用户或浏览器策略可能拒绝权限，此处静默处理即可。
+  });
+}
+
+function pushBreakReminder(isLongBreak) {
+  const quote = BREAK_QUOTES[Math.floor(Math.random() * BREAK_QUOTES.length)];
+  const breakTitle = isLongBreak ? '大休息开始' : '短休息开始';
+  const msg = `${breakTitle}：记得喝水并放松一下。${quote}`;
+  showToast(msg);
+  dom.quoteText.style.opacity = '0';
+  clearTimeout(breakQuoteTimer);
+  breakQuoteTimer = setTimeout(() => {
+    dom.quoteText.textContent = quote;
+    dom.quoteText.style.opacity = '1';
+  }, 220);
+
+  if ('Notification' in window && Notification.permission === 'granted') {
+    new Notification('番茄钟提醒', {
+      body: msg,
+    });
+  }
+}
+
+function stopPomodoroTimer() {
+  clearInterval(pomodoroTimer);
+  pomodoroTimer = null;
+  state.pomodoro.running = false;
+}
+
+function nextPomodoroPhase() {
+  const p = state.pomodoro;
+  if (p.phase === 'focus') {
+    p.focusDoneInCycle += 1;
+    if (p.focusDoneInCycle >= POMODORO.cycleLength) {
+      p.phase = 'longBreak';
+      p.secondsLeft = POMODORO.longBreak;
+      p.focusDoneInCycle = 0;
+      pushBreakReminder(true);
+    } else {
+      p.phase = 'shortBreak';
+      p.secondsLeft = POMODORO.shortBreak;
+      pushBreakReminder(false);
+    }
+  } else {
+    p.phase = 'focus';
+    p.secondsLeft = POMODORO.focus;
+    showToast('休息结束，继续专注修炼。');
+  }
+}
+
+function pomodoroTick() {
+  if (!state.pomodoro.running) return;
+  state.pomodoro.secondsLeft -= 1;
+  if (state.pomodoro.secondsLeft <= 0) {
+    nextPomodoroPhase();
+  }
+  save();
+  renderPomodoro();
+}
+
+function togglePomodoro() {
+  if (state.pomodoro.running) {
+    stopPomodoroTimer();
+    save();
+    renderPomodoro();
+    return;
+  }
+
+  requestNotifyPermission();
+  state.pomodoro.running = true;
+  pomodoroTimer = setInterval(pomodoroTick, 1000);
+  save();
+  renderPomodoro();
+}
+
+function resetPomodoro() {
+  stopPomodoroTimer();
+  state.pomodoro.phase = 'focus';
+  state.pomodoro.secondsLeft = POMODORO.focus;
+  state.pomodoro.focusDoneInCycle = 0;
+  save();
+  renderPomodoro();
+  showToast('番茄钟已重置。');
+}
+
+function initPomodoro() {
+  dom.pomoStartBtn.addEventListener('click', togglePomodoro);
+  dom.pomoResetBtn.addEventListener('click', resetPomodoro);
+  renderPomodoro();
+}
+
 // ── 语录 ─────────────────────────────────────────────────
 
 function randomQuote() {
@@ -682,6 +846,7 @@ function init() {
   initSettings();
   initModalEvents();
   initTaskListEvents();
+  initPomodoro();
 
   // 加载动画
   pageLoadAnimation();
