@@ -28,14 +28,15 @@ const SPIRIT_BEASTS = [
 const $ = id => document.getElementById(id);
 
 const dom = {
+  layout: $('layout'),
   taskList: $('taskList'),
   emptyState: $('emptyState'),
   addTaskBtn: $('addTaskBtn'),
   topActions: $('topActions'),
-  featurePanel: $('featurePanel'),
-  featurePanelTitle: $('featurePanelTitle'),
-  featurePanelBody: $('featurePanelBody'),
-  featurePanelClose: $('featurePanelClose'),
+  fullPanel: $('fullPanel'),
+  fullPanelBack: $('fullPanelBack'),
+  fullPanelTitle: $('fullPanelTitle'),
+  fullPanelBody: $('fullPanelBody'),
   categoryFilters: $('categoryFilters'),
   realmFilters: $('realmFilters'),
   logTodayFocus: $('logTodayFocus'),
@@ -437,19 +438,21 @@ function panelBadgeHtml() {
 function renderFeaturePanel() {
   const type = state.ui.activePanel;
   if (!type) {
-    dom.featurePanel.hidden = true;
+    dom.layout.hidden = false;
+    dom.fullPanel.hidden = true;
     return;
   }
-  dom.featurePanel.hidden = false;
+  dom.layout.hidden = true;
+  dom.fullPanel.hidden = false;
   if (type === 'chance') {
-    dom.featurePanelTitle.textContent = '机缘触发';
-    dom.featurePanelBody.innerHTML = panelChanceHtml();
+    dom.fullPanelTitle.textContent = '机缘触发';
+    dom.fullPanelBody.innerHTML = panelChanceHtml();
   } else if (type === 'treasury') {
-    dom.featurePanelTitle.textContent = '修仙宝库图鉴';
-    dom.featurePanelBody.innerHTML = panelTreasuryHtml();
+    dom.fullPanelTitle.textContent = '修仙宝库图鉴';
+    dom.fullPanelBody.innerHTML = panelTreasuryHtml();
   } else {
-    dom.featurePanelTitle.textContent = '徽章系统';
-    dom.featurePanelBody.innerHTML = panelBadgeHtml();
+    dom.fullPanelTitle.textContent = '徽章系统';
+    dom.fullPanelBody.innerHTML = panelBadgeHtml();
   }
 }
 
@@ -825,12 +828,12 @@ function initEvents() {
     if (!btn) return;
     toggleFeaturePanel(btn.dataset.panel);
   });
-  dom.featurePanelClose.addEventListener('click', () => {
+  dom.fullPanelBack.addEventListener('click', () => {
     state.ui.activePanel = '';
     renderAll();
   });
 
-  dom.featurePanelBody.addEventListener('click', e => {
+  dom.fullPanelBody.addEventListener('click', e => {
     const action = e.target.dataset.action;
     if (action === 'trigger-chance') triggerChance();
     if (action === 'exchange-token') exchangeToken();
@@ -911,11 +914,103 @@ function initParticles() {
   }
 }
 
+const POMO_POS_KEY = 'hanli_pomo_pos';
+
+function savePomodoroPos(left, top) {
+  try { localStorage.setItem(POMO_POS_KEY, JSON.stringify({ left, top })); } catch (_) {}
+}
+
+function loadPomodoroPos() {
+  try {
+    const raw = localStorage.getItem(POMO_POS_KEY);
+    return raw ? JSON.parse(raw) : null;
+  } catch (_) { return null; }
+}
+
+function clampPomoPos(el, left, top) {
+  const w = el.offsetWidth || 250;
+  const h = el.offsetHeight || 300;
+  return {
+    left: Math.max(0, Math.min(window.innerWidth - w, left)),
+    top: Math.max(0, Math.min(window.innerHeight - h, top))
+  };
+}
+
+function applyPomoPos(left, top) {
+  const el = $('floatingPomodoro');
+  const pos = clampPomoPos(el, left, top);
+  el.style.left = pos.left + 'px';
+  el.style.top = pos.top + 'px';
+  el.style.bottom = 'auto';
+  el.style.right = 'auto';
+}
+
+function initPomoDrag() {
+  const el = $('floatingPomodoro');
+  const handle = el.querySelector('.pomodoro-title');
+  let dragging = false;
+  let startX = 0, startY = 0, startLeft = 0, startTop = 0;
+
+  function beginDrag(clientX, clientY) {
+    const rect = el.getBoundingClientRect();
+    el.style.left = rect.left + 'px';
+    el.style.top = rect.top + 'px';
+    el.style.bottom = 'auto';
+    el.style.right = 'auto';
+    startLeft = rect.left;
+    startTop = rect.top;
+    startX = clientX;
+    startY = clientY;
+    dragging = true;
+    handle.classList.add('dragging');
+  }
+
+  function moveDrag(clientX, clientY) {
+    if (!dragging) return;
+    const pos = clampPomoPos(el, startLeft + (clientX - startX), startTop + (clientY - startY));
+    el.style.left = pos.left + 'px';
+    el.style.top = pos.top + 'px';
+  }
+
+  function endDrag() {
+    if (!dragging) return;
+    dragging = false;
+    handle.classList.remove('dragging');
+    const rect = el.getBoundingClientRect();
+    savePomodoroPos(rect.left, rect.top);
+  }
+
+  handle.addEventListener('mousedown', e => { e.preventDefault(); beginDrag(e.clientX, e.clientY); });
+  document.addEventListener('mousemove', e => moveDrag(e.clientX, e.clientY));
+  document.addEventListener('mouseup', endDrag);
+
+  handle.addEventListener('touchstart', e => {
+    const t = e.touches[0];
+    beginDrag(t.clientX, t.clientY);
+  }, { passive: true });
+  document.addEventListener('touchmove', e => {
+    if (!dragging) return;
+    e.preventDefault();
+    const t = e.touches[0];
+    moveDrag(t.clientX, t.clientY);
+  }, { passive: false });
+  document.addEventListener('touchend', endDrag, { passive: true });
+
+  window.addEventListener('resize', () => {
+    const rect = el.getBoundingClientRect();
+    applyPomoPos(rect.left, rect.top);
+  });
+
+  const saved = loadPomodoroPos();
+  if (saved) applyPomoPos(saved.left, saved.top);
+}
+
 async function init() {
   await load();
   settleDayIfNeeded();
   ensureLog(todayStr());
   initParticles();
+  initPomoDrag();
   initEvents();
   renderAll();
 }

@@ -37,7 +37,7 @@
     </div>
   </header>
 
-  <div class="layout">
+  <div class="layout" id="layout">
     <aside class="sidebar simple-sidebar">
       <section class="sb-section">
         <h3 class="sb-heading"><span class="sb-deco">✦</span> 待办分类 <span class="sb-deco">✦</span></h3>
@@ -96,15 +96,15 @@
           </div>
         </section>
       </section>
-
-      <section class="feature-panel" id="featurePanel" hidden>
-        <div class="feature-panel-hd">
-          <h3 class="main-title" id="featurePanelTitle">详情面板</h3>
-          <button class="modal-x" id="featurePanelClose">✕</button>
-        </div>
-        <div class="feature-panel-bd" id="featurePanelBody"></div>
-      </section>
     </main>
+  </div>
+
+  <div class="full-panel" id="fullPanel" hidden>
+    <div class="full-panel-hd">
+      <button class="full-panel-back" id="fullPanelBack">← 返回修炼</button>
+      <h2 class="full-panel-title" id="fullPanelTitle"></h2>
+    </div>
+    <div class="full-panel-bd" id="fullPanelBody"></div>
   </div>
 
   <div class="modal-overlay" id="modalOverlay" hidden>
