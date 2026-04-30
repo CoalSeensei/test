@@ -52,7 +52,7 @@ function initCopyButtons() {
         showToast('没有找到可复制的内容');
         return;
       }
-      const text = target.innerText.trim();
+      const text = target.textContent.trim();
       try {
         await navigator.clipboard.writeText(text);
         showToast('模板已复制');
@@ -63,6 +63,31 @@ function initCopyButtons() {
   });
 }
 
+function initFeedbackForm() {
+  const form = document.getElementById('feedbackForm');
+  if (!form) return;
+  form.addEventListener('submit', async event => {
+    event.preventDefault();
+    const name = document.getElementById('feedbackName')?.value.trim();
+    const email = document.getElementById('feedbackEmail')?.value.trim();
+    const message = document.getElementById('feedbackMessage')?.value.trim();
+
+    const body = `姓名：${name || '-'}\n邮箱：${email || '-'}\n\n反馈：\n${message || '-'}`;
+    const subject = encodeURIComponent('Vibecoding 教程站反馈');
+    const mailto = `mailto:hello@example.com?subject=${subject}&body=${encodeURIComponent(body)}`;
+
+    try {
+      await navigator.clipboard.writeText(body);
+      showToast('反馈内容已复制，正在打开邮箱');
+    } catch (error) {
+      showToast('正在打开邮箱');
+    }
+
+    window.location.href = mailto;
+  });
+}
+
 initTabs();
 initFaq();
 initCopyButtons();
+initFeedbackForm();

@@ -448,6 +448,11 @@ main {
   gap: 16px;
 }
 
+.feedback-note {
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
 .feedback-form label {
   display: grid;
   gap: 8px;
@@ -460,6 +465,11 @@ main {
   border: 1px solid var(--border);
   padding: 10px 12px;
   font-size: 14px;
+}
+
+.field-hint {
+  font-size: 12px;
+  color: var(--text-muted);
 }
 
 .form-row {

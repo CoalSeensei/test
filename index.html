@@ -400,21 +400,23 @@
         <h2>反馈与共创</h2>
         <p>留下你的问题或建议，我们会在下次迭代中回应。</p>
       </div>
-      <form class="feedback-form" action="mailto:hello@example.com" method="post" enctype="text/plain">
+      <p class="feedback-note">提交后会尝试打开邮箱客户端，同时自动复制反馈内容，便于你粘贴发送。</p>
+      <form class="feedback-form" id="feedbackForm">
         <div class="form-row">
           <label>
             名称
-            <input type="text" name="name" placeholder="你的称呼" />
+            <input type="text" name="name" id="feedbackName" placeholder="你的称呼" autocomplete="name" required aria-describedby="feedbackHint" />
           </label>
           <label>
             邮箱
-            <input type="email" name="email" placeholder="you@example.com" />
+            <input type="email" name="email" id="feedbackEmail" placeholder="you@example.com" autocomplete="email" required aria-describedby="feedbackHint" />
           </label>
         </div>
         <label>
           反馈内容
-          <textarea name="message" rows="4" placeholder="想要改进的内容或新增模块"></textarea>
+          <textarea name="message" id="feedbackMessage" rows="4" placeholder="想要改进的内容或新增模块" required aria-describedby="feedbackHint"></textarea>
         </label>
+        <span class="field-hint" id="feedbackHint">必填字段用于整理反馈，信息仅用于教学站点改进。</span>
         <button type="submit" class="primary-btn">发送反馈</button>
       </form>
     </section>
