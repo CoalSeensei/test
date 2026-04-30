@@ -77,23 +77,23 @@ function initFeedbackForm() {
   if (!form) return;
   form.addEventListener('submit', async event => {
     event.preventDefault();
-    const feedbackEmail = form.dataset.feedbackEmail || 'feedback@yourcompany.com';
+    const feedbackUrl = form.dataset.feedbackUrl;
     const name = document.getElementById('feedbackName')?.value.trim();
     const email = document.getElementById('feedbackEmail')?.value.trim();
     const message = document.getElementById('feedbackMessage')?.value.trim();
 
     const body = `姓名：${name || '-'}\n邮箱：${email || '-'}\n\n反馈：\n${message || '-'}`;
-    const subject = encodeURIComponent('Vibecoding 教程站反馈');
-    const mailto = `mailto:${feedbackEmail}?subject=${subject}&body=${encodeURIComponent(body)}`;
 
     try {
       await navigator.clipboard.writeText(body);
-      showToast('反馈内容已复制，正在打开邮箱');
+      showToast('反馈内容已复制，正在打开 Issues');
     } catch (error) {
-      showToast('正在打开邮箱');
+      showToast('正在打开 Issues');
     }
 
-    window.location.href = mailto;
+    if (feedbackUrl) {
+      window.open(feedbackUrl, '_blank', 'noopener');
+    }
   });
 }
 

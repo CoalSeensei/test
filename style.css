@@ -454,8 +454,6 @@ main {
 }
 
 .feedback-form label {
-  display: grid;
-  gap: 8px;
   font-weight: 600;
 }
 
@@ -476,6 +474,11 @@ main {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 16px;
+}
+
+.field {
+  display: grid;
+  gap: 8px;
 }
 
 .site-footer {
