@@ -3,165 +3,429 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>韩立的修仙历练簿</title>
+  <title>Vibecoding 教程站</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;500;700;900&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
 </head>
-<body data-bg="tiannan">
-  <div class="bg-layer">
-    <div class="bg-mountains"></div>
-    <div class="bg-particles" id="particles"></div>
-    <div class="bg-vignette"></div>
-  </div>
-
-  <header class="header">
-    <div class="header-left">
-      <div class="avatar">韩</div>
-      <div class="brand">
-        <span class="brand-title">凡人修仙传</span>
-        <span class="brand-sub">A Record of a Mortal's Journey</span>
+<body>
+  <header class="site-header">
+    <div class="brand">
+      <span class="brand-mark">VC</span>
+      <div class="brand-text">
+        <span class="brand-title">Vibecoding 教程站</span>
+        <span class="brand-sub">从意图表达走向协作交付</span>
       </div>
     </div>
-
-    <div class="header-center">
-      <h1 class="site-title">韩立的修仙历练簿</h1>
-      <div class="title-brush"></div>
-    </div>
-
-    <div class="header-right top-actions" id="topActions">
-      <button class="top-action-btn" data-panel="chance">⚡ 机缘触发</button>
-      <button class="top-action-btn" data-panel="treasury">📚 修仙宝库</button>
-      <button class="top-action-btn" data-panel="badge">🏅 徽章系统</button>
-    </div>
+    <nav class="site-nav">
+      <a href="#goals">目标</a>
+      <a href="#architecture">架构</a>
+      <a href="#path">学习路径</a>
+      <a href="#modules">互动模块</a>
+      <a href="#updates">更新机制</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+    <a class="primary-btn" href="#path">开始学习</a>
   </header>
 
-  <div class="layout" id="layout">
-    <aside class="sidebar simple-sidebar">
-      <section class="sb-section">
-        <h3 class="sb-heading"><span class="sb-deco">✦</span> 待办分类 <span class="sb-deco">✦</span></h3>
-        <div class="filter-group" id="categoryFilters">
-          <button class="grade-btn active" data-category="all">全部</button>
-          <button class="grade-btn" data-category="todo">未完成</button>
-          <button class="grade-btn" data-category="doing">进行中</button>
-          <button class="grade-btn" data-category="done">已完成</button>
+  <main>
+    <section class="hero" id="top">
+      <div class="hero-content">
+        <p class="hero-eyebrow">静态站点 · 低成本维护 · 持续可扩展</p>
+        <h1>打造一套可执行的 Vibecoding 教程体系</h1>
+        <p class="hero-lead">
+          面向新手入门、进阶实践与团队落地，围绕“意图 → 约束 → 协作 → 质量”构建清晰路径，
+          用可复用的模板与案例帮助学习者快速上手。
+        </p>
+        <div class="hero-actions">
+          <a class="primary-btn" href="#modules">体验互动模块</a>
+          <a class="ghost-btn" href="#architecture">查看站点结构</a>
         </div>
-      </section>
-
-      <section class="sb-section">
-        <h3 class="sb-heading"><span class="sb-deco">✦</span> 修仙境界筛选 <span class="sb-deco">✦</span></h3>
-        <div class="realm-list" id="realmFilters">
-          <button class="realm-item active" data-realm="all"><span class="realm-name">全部境界</span></button>
-          <button class="realm-item" data-realm="fanren"><span class="realm-name">凡人</span></button>
-          <button class="realm-item" data-realm="lianqi"><span class="realm-name">炼气</span></button>
-          <button class="realm-item" data-realm="zhuji"><span class="realm-name">筑基</span></button>
-          <button class="realm-item" data-realm="jindan"><span class="realm-name">金丹</span></button>
-          <button class="realm-item" data-realm="yuanying"><span class="realm-name">元婴+</span></button>
-        </div>
-      </section>
-    </aside>
-
-    <main class="main">
-      <section class="main-default" id="mainDefault">
-        <div class="main-header">
-          <h2 class="main-title">修炼日志</h2>
-        </div>
-
-        <div class="log-grid">
-          <article class="log-card"><h4>今日番茄钟专注总时长</h4><p id="logTodayFocus">0 分钟</p></article>
-          <article class="log-card"><h4>今日专注等级</h4><p id="logTodayLevel">炼气期专注</p></article>
-          <article class="log-card"><h4>累计灵石数量</h4><p id="logTotalStones">0</p></article>
-          <article class="log-card"><h4>今日完成待办数</h4><p id="logTodayDone">0</p></article>
-        </div>
-
-        <section class="history-card">
-          <h3 class="main-title">历史专注数据概览（近 7 日）</h3>
-          <div id="logHistory" class="log-history"></div>
-        </section>
-
-        <section class="task-section">
-          <div class="task-section-head">
-            <h3 class="main-title">历练任务</h3>
-            <button class="add-btn" id="addTaskBtn">
-              <span class="add-btn-icon">符</span>
-              <span class="add-btn-text">新增历练任务</span>
-            </button>
+        <div class="hero-metrics">
+          <div class="metric-card">
+            <span class="metric-value">7</span>
+            <span class="metric-label">关键模块</span>
           </div>
-          <div class="task-list" id="taskList"></div>
-          <div class="empty-state" id="emptyState" hidden>
-            <div class="empty-scroll">📜</div>
-            <p class="empty-title">暂无历练任务</p>
-            <p class="empty-hint">低调积累，步步为营</p>
+          <div class="metric-card">
+            <span class="metric-value">4</span>
+            <span class="metric-label">学习阶段</span>
           </div>
-        </section>
-      </section>
-    </main>
-  </div>
-
-  <div class="full-panel" id="fullPanel" hidden>
-    <div class="full-panel-hd">
-      <button class="full-panel-back" id="fullPanelBack">← 返回修炼</button>
-      <h2 class="full-panel-title" id="fullPanelTitle"></h2>
-    </div>
-    <div class="full-panel-bd" id="fullPanelBody"></div>
-  </div>
-
-  <div class="modal-overlay" id="modalOverlay" hidden>
-    <div class="modal" id="modal">
-      <div class="modal-hd">
-        <h3 class="modal-title" id="modalTitle">新增历练任务</h3>
-        <button class="modal-x" id="modalClose">✕</button>
-      </div>
-      <div class="modal-bd">
-        <div class="field">
-          <label class="field-label">历练内容</label>
-          <input class="field-input" id="taskInput" type="text" placeholder="请输入修仙任务…" maxlength="100" autocomplete="off" />
-        </div>
-        <div class="field">
-          <label class="field-label">绑定番茄钟</label>
-          <select class="field-input" id="bindTypeSelect">
-            <option value="none">不绑定</option>
-            <option value="one">1 个番茄钟</option>
-            <option value="custom">自定义时长</option>
-          </select>
-        </div>
-        <div class="field" id="customMinutesWrap" hidden>
-          <label class="field-label">自定义绑定时长（分钟）</label>
-          <input class="field-input" id="customMinutesInput" type="number" min="10" max="600" value="50" />
+          <div class="metric-card">
+            <span class="metric-value">12</span>
+            <span class="metric-label">示例任务</span>
+          </div>
         </div>
       </div>
-      <div class="modal-ft">
-        <button class="cancel-btn" id="modalCancel">取消</button>
-        <button class="submit-btn" id="modalSubmit">保存任务</button>
+      <div class="hero-panel">
+        <div class="panel-card">
+          <h3>站点目标</h3>
+          <ul>
+            <li>让学习者快速写出清晰的意图与约束</li>
+            <li>形成可重复使用的任务模板与评估标准</li>
+            <li>帮助团队搭建安全、稳定、可交付的协作流程</li>
+          </ul>
+        </div>
+        <div class="panel-card">
+          <h3>默认语言与地区</h3>
+          <div class="pill-group">
+            <span class="pill">简体中文</span>
+            <span class="pill">中文团队</span>
+            <span class="pill">远程协作</span>
+          </div>
+        </div>
       </div>
-    </div>
-  </div>
+    </section>
 
-  <div class="task-menu" id="taskMenu" hidden>
-    <button id="menuEditBtn">编辑任务</button>
-    <button id="menuDeleteBtn">删除任务</button>
-  </div>
-
-  <div class="toast" id="toast"></div>
-
-  <div class="floating-pomodoro" id="floatingPomodoro">
-    <div class="pomodoro-title">🫙 闭关专注</div>
-    <div class="pomodoro-phase" id="pomoPhase">专注修炼</div>
-    <div class="pomodoro-timer" id="pomoTimer">00:00</div>
-    <div class="pomodoro-cycle" id="pomoInfo">当前 0 / 剩余 0 分钟</div>
-    <div class="pomodoro-config">
-      <label for="floatingPomoMinutesInput">时长（10-60 分钟）</label>
-      <div class="pomodoro-config-row">
-        <input id="floatingPomoMinutesInput" class="field-input" type="number" min="10" max="60" value="25" />
-        <button class="pomodoro-btn" id="floatingPomoApplyBtn">应用</button>
+    <section class="section" id="goals">
+      <div class="section-head">
+        <h2>明确目标与受众</h2>
+        <p>用三个层级描述你的学习者，并给出可执行的学习产出。</p>
       </div>
-    </div>
-    <div class="pomodoro-actions">
-      <button class="pomodoro-btn primary" id="pomoStartBtn">开始</button>
-      <button class="pomodoro-btn" id="pomoResetBtn">重置</button>
-    </div>
-  </div>
+      <div class="grid three">
+        <article class="card">
+          <h3>新手入门</h3>
+          <p>聚焦“如何表达意图”，提供可复制的任务描述模板。</p>
+          <ul>
+            <li>基础术语速览</li>
+            <li>提示词结构化示例</li>
+            <li>错误用例对比</li>
+          </ul>
+        </article>
+        <article class="card">
+          <h3>进阶实践</h3>
+          <p>强调约束、验收与迭代协作，提升交付质量。</p>
+          <ul>
+            <li>多轮协作示范</li>
+            <li>验收清单模板</li>
+            <li>复杂任务拆解</li>
+          </ul>
+        </article>
+        <article class="card">
+          <h3>团队落地</h3>
+          <p>帮助团队统一标准、建立知识库与反馈机制。</p>
+          <ul>
+            <li>角色分工与职责</li>
+            <li>质量与安全流程</li>
+            <li>项目复盘模板</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="architecture">
+      <div class="section-head">
+        <h2>信息架构</h2>
+        <p>核心页面覆盖学习路径、案例与反馈闭环。</p>
+      </div>
+      <div class="grid three">
+        <article class="card">
+          <h3>主页</h3>
+          <p>浓缩价值主张、快速入口、最新更新。</p>
+        </article>
+        <article class="card">
+          <h3>入门指南</h3>
+          <p>理解 Vibecoding 的核心概念与流程。</p>
+        </article>
+        <article class="card">
+          <h3>Agent 模式</h3>
+          <p>解释任务委派、上下文与反馈机制。</p>
+        </article>
+        <article class="card">
+          <h3>任务示例库</h3>
+          <p>分类存放模板、案例与拆解说明。</p>
+        </article>
+        <article class="card">
+          <h3>FAQ</h3>
+          <p>集中回答常见疑问与避坑经验。</p>
+        </article>
+        <article class="card">
+          <h3>社区 / 反馈</h3>
+          <p>收集用户建议，持续优化内容。</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="path">
+      <div class="section-head">
+        <h2>核心学习路径</h2>
+        <p>用四个阶段串联从意图到交付的全过程。</p>
+      </div>
+      <div class="timeline">
+        <div class="timeline-step">
+          <div class="step-index">01</div>
+          <div>
+            <h3>意图表达</h3>
+            <p>明确目标、背景、期望结果，避免模糊指令。</p>
+            <span class="step-tag">示例：需求一句话 + 产出格式</span>
+          </div>
+        </div>
+        <div class="timeline-step">
+          <div class="step-index">02</div>
+          <div>
+            <h3>约束说明</h3>
+            <p>定义范围、风格、风险与边界条件。</p>
+            <span class="step-tag">示例：技术栈、时间、禁止项</span>
+          </div>
+        </div>
+        <div class="timeline-step">
+          <div class="step-index">03</div>
+          <div>
+            <h3>迭代协作</h3>
+            <p>通过反馈、复盘和补充信息不断优化产出。</p>
+            <span class="step-tag">示例：分阶段提交、逐步验收</span>
+          </div>
+        </div>
+        <div class="timeline-step">
+          <div class="step-index">04</div>
+          <div>
+            <h3>质量与安全</h3>
+            <p>引入检查清单、隐私规则和质量评估。</p>
+            <span class="step-tag">示例：安全红线 + 测试验收</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="formats">
+      <div class="section-head">
+        <h2>内容形态</h2>
+        <p>确保不同学习者都能找到适合自己的学习方式。</p>
+      </div>
+      <div class="grid three">
+        <article class="card">
+          <h3>短文 / 摘要</h3>
+          <p>快速解释概念、提供背景知识。</p>
+        </article>
+        <article class="card">
+          <h3>流程图</h3>
+          <p>展示任务从输入到输出的流程。</p>
+        </article>
+        <article class="card">
+          <h3>步骤清单</h3>
+          <p>从计划到验收的逐步执行。</p>
+        </article>
+        <article class="card">
+          <h3>常见错误对照</h3>
+          <p>错误示例 + 改写示例并列。</p>
+        </article>
+        <article class="card">
+          <h3>最佳实践清单</h3>
+          <p>可复用的提示词与协作模板。</p>
+        </article>
+        <article class="card">
+          <h3>案例拆解</h3>
+          <p>完整任务的拆解与复盘。</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="modules">
+      <div class="section-head">
+        <h2>互动模块</h2>
+        <p>让学习者在实践中掌握 Vibecoding 的节奏。</p>
+      </div>
+      <div class="tabs" data-tabs>
+        <div class="tab-list" role="tablist">
+          <button class="tab-button active" data-tab="qa" role="tab" aria-selected="true">任务问答</button>
+          <button class="tab-button" data-tab="templates" role="tab" aria-selected="false">模板提示词</button>
+          <button class="tab-button" data-tab="cases" role="tab" aria-selected="false">案例拆解</button>
+          <button class="tab-button" data-tab="assignments" role="tab" aria-selected="false">作业与自测</button>
+        </div>
+        <div class="tab-panels">
+          <div class="tab-panel active" id="qa" role="tabpanel">
+            <div class="qa-list">
+              <div class="qa-item">
+                <h4>Q：如何让任务更清晰？</h4>
+                <p>A：用“目标 + 背景 + 输出格式 + 约束”四段式描述。</p>
+              </div>
+              <div class="qa-item">
+                <h4>Q：什么时候需要分阶段提交？</h4>
+                <p>A：当任务包含多个子目标或有明显风险点时。</p>
+              </div>
+              <div class="qa-item">
+                <h4>Q：如何验证输出质量？</h4>
+                <p>A：使用验收清单，明确成功与失败标准。</p>
+              </div>
+            </div>
+          </div>
+          <div class="tab-panel" id="templates" role="tabpanel">
+            <div class="template-card">
+              <div>
+                <h4>任务描述模板</h4>
+                <pre id="template-task" class="code">目标：
+背景：
+输出：
+约束：
+验收：
+</pre>
+              </div>
+              <button class="ghost-btn copy-btn" data-copy-target="template-task">复制模板</button>
+            </div>
+            <div class="template-card">
+              <div>
+                <h4>验收清单模板</h4>
+                <pre id="template-review" class="code">- 功能完成度
+- 数据准确性
+- 安全与合规
+- 风格与格式
+- 可维护性
+</pre>
+              </div>
+              <button class="ghost-btn copy-btn" data-copy-target="template-review">复制模板</button>
+            </div>
+          </div>
+          <div class="tab-panel" id="cases" role="tabpanel">
+            <div class="case-grid">
+              <article class="card">
+                <h4>案例：内容策划</h4>
+                <p>从需求到交付：拆分 3 个阶段 + 2 次复盘。</p>
+                <span class="badge">内容型任务</span>
+              </article>
+              <article class="card">
+                <h4>案例：产品文档</h4>
+                <p>如何定义目标人群、约束和验收标准。</p>
+                <span class="badge">文档型任务</span>
+              </article>
+              <article class="card">
+                <h4>案例：研发协作</h4>
+                <p>把需求拆成可执行的步骤与风险提示。</p>
+                <span class="badge">技术型任务</span>
+              </article>
+            </div>
+          </div>
+          <div class="tab-panel" id="assignments" role="tabpanel">
+            <div class="assignment-list">
+              <div class="assignment-item">
+                <h4>作业 01</h4>
+                <p>用四段式模板描述一个你正在做的任务。</p>
+              </div>
+              <div class="assignment-item">
+                <h4>作业 02</h4>
+                <p>为该任务补充 5 条验收标准。</p>
+              </div>
+              <div class="assignment-item">
+                <h4>作业 03</h4>
+                <p>写出一次迭代反馈与调整策略。</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="updates">
+      <div class="section-head">
+        <h2>更新机制</h2>
+        <p>确保教程持续迭代并保持内容新鲜。</p>
+      </div>
+      <div class="grid two">
+        <article class="card">
+          <h3>内容版本化</h3>
+          <p>每个模块标注版本号与更新日志，便于追踪变化。</p>
+          <ul>
+            <li>季度更新路线图</li>
+            <li>高频问题优先修订</li>
+            <li>新增案例独立归档</li>
+          </ul>
+        </article>
+        <article class="card">
+          <h3>反馈入口</h3>
+          <p>引导学习者提交建议，并将高质量反馈转化为内容。</p>
+          <ul>
+            <li>匿名问卷</li>
+            <li>社区共创</li>
+            <li>每月新增案例</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="implementation">
+      <div class="section-head">
+        <h2>实现方式</h2>
+        <p>优先静态站点，保证低成本部署与快速迭代。</p>
+      </div>
+      <div class="grid two">
+        <article class="card">
+          <h3>当前方案</h3>
+          <p>纯静态 HTML/CSS/JS，适配 GitHub Pages。</p>
+          <ul>
+            <li>无需构建流程</li>
+            <li>部署快速</li>
+            <li>维护简单</li>
+          </ul>
+        </article>
+        <article class="card">
+          <h3>后续扩展</h3>
+          <p>如果需要账号体系或进度跟踪，可迁移到轻量后端。</p>
+          <ul>
+            <li>用户登录与进度</li>
+            <li>案例收藏</li>
+            <li>团队空间</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="faq">
+      <div class="section-head">
+        <h2>常见问题</h2>
+        <p>集中回答入门与落地时最常见的疑问。</p>
+      </div>
+      <div class="faq">
+        <div class="faq-item">
+          <button class="faq-question" aria-expanded="false">什么是 Vibecoding？</button>
+          <div class="faq-answer">
+            <p>它是一种通过清晰表达意图与约束，配合 AI/Agent 协作完成任务的工作方法。</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question" aria-expanded="false">适合哪些团队？</button>
+          <div class="faq-answer">
+            <p>适合内容、产品、研发等需要跨角色协作的团队。</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question" aria-expanded="false">如何衡量学习效果？</button>
+          <div class="faq-answer">
+            <p>使用任务完成度、迭代效率与质量验收结果进行评估。</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="feedback">
+      <div class="section-head">
+        <h2>反馈与共创</h2>
+        <p>留下你的问题或建议，我们会在下次迭代中回应。</p>
+      </div>
+      <form class="feedback-form" action="mailto:hello@example.com" method="post" enctype="text/plain">
+        <div class="form-row">
+          <label>
+            名称
+            <input type="text" name="name" placeholder="你的称呼" />
+          </label>
+          <label>
+            邮箱
+            <input type="email" name="email" placeholder="you@example.com" />
+          </label>
+        </div>
+        <label>
+          反馈内容
+          <textarea name="message" rows="4" placeholder="想要改进的内容或新增模块"></textarea>
+        </label>
+        <button type="submit" class="primary-btn">发送反馈</button>
+      </form>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>Vibecoding 教程站 · 以清晰、协作、可交付为核心</p>
+    <a href="#top">返回顶部 ↑</a>
+  </footer>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
   <script src="app.js"></script>
 </body>
