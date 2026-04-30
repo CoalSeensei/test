@@ -14,7 +14,7 @@ function showToast(message) {
 }
 
 async function copyText(text) {
-  if (navigator.clipboard?.writeText) {
+  if (navigator.clipboard && navigator.clipboard.writeText) {
     try {
       await navigator.clipboard.writeText(text);
       return true;
