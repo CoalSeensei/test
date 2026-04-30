@@ -18,7 +18,8 @@ async function copyText(text) {
     try {
       await navigator.clipboard.writeText(text);
       return true;
-    } catch {
+    } catch (error) {
+      console.warn('Clipboard write failed', error);
       return false;
     }
   }
@@ -33,7 +34,8 @@ async function copyText(text) {
     const result = document.execCommand('copy');
     document.body.removeChild(textarea);
     return result;
-  } catch {
+  } catch (error) {
+    console.warn('Clipboard fallback failed', error);
     return false;
   }
 }
