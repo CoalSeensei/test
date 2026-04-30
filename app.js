@@ -28,6 +28,13 @@ function initTabs() {
         panel.classList.toggle('active', panel.id === target);
       });
     });
+
+    button.addEventListener('keydown', event => {
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        button.click();
+      }
+    });
   });
 }
 
@@ -36,6 +43,7 @@ function initFaq() {
   items.forEach(item => {
     const button = item.querySelector('.faq-question');
     if (!button) return;
+    button.setAttribute('aria-expanded', 'false');
     button.addEventListener('click', () => {
       const isOpen = item.classList.toggle('open');
       button.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
