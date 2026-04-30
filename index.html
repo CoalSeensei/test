@@ -3,166 +3,257 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>韩立的修仙历练簿</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;500;700;900&display=swap" rel="stylesheet" />
+  <title>VibeCoding教程｜零基础入门教程｜沉浸式氛围感编程实操</title>
+  <meta name="description" content="VibeCoding教程轻量化垂类干货教程站，提供VibeCoding零基础入门教程、沉浸式氛围感编程实操与实操完整教学，配套代码片段与问题快速答疑，手机电脑自适应，全站中文合规干货。" />
+  <meta name="keywords" content="VibeCoding教程,VibeCoding零基础入门教程,VibeCoding沉浸式氛围感编程,VibeCoding实操完整教学,AI氛围感编程VibeCoding教学,VibeCoding基础环境搭建全套步骤,VibeCoding新手快速上手实操流程,VibeCoding常用指令编写技巧大全,VibeCoding本地项目从零搭建教程,VibeCoding网页小程序快速开发案例,VibeCoding代码调试排错完整方法,VibeCoding快捷键高效办公实操技巧,VibeCoding轻量化项目落地实战课,零基础怎么学VibeCoding最快,VibeCoding极简学习路线规划图,VibeCoding免费干货资源汇总,沉浸式编程学习技巧分享专区" />
   <link rel="stylesheet" href="style.css" />
 </head>
-<body data-bg="tiannan">
-  <div class="bg-layer">
-    <div class="bg-mountains"></div>
-    <div class="bg-particles" id="particles"></div>
-    <div class="bg-vignette"></div>
-  </div>
-
-  <header class="header">
-    <div class="header-left">
-      <div class="avatar">韩</div>
-      <div class="brand">
-        <span class="brand-title">凡人修仙传</span>
-        <span class="brand-sub">A Record of a Mortal's Journey</span>
-      </div>
-    </div>
-
-    <div class="header-center">
-      <h1 class="site-title">韩立的修仙历练簿</h1>
-      <div class="title-brush"></div>
-    </div>
-
-    <div class="header-right top-actions" id="topActions">
-      <button class="top-action-btn" data-panel="chance">⚡ 机缘触发</button>
-      <button class="top-action-btn" data-panel="treasury">📚 修仙宝库</button>
-      <button class="top-action-btn" data-panel="badge">🏅 徽章系统</button>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <div class="logo">VibeCoding教程</div>
+      <nav class="site-nav">
+        <a href="#home">首页</a>
+        <a href="#starter">入门教程</a>
+        <a href="#cases">实操案例</a>
+        <a href="#faq">问题答疑</a>
+        <a href="#path">学习路线</a>
+      </nav>
     </div>
   </header>
 
-  <div class="layout" id="layout">
-    <aside class="sidebar simple-sidebar">
-      <section class="sb-section">
-        <h3 class="sb-heading"><span class="sb-deco">✦</span> 待办分类 <span class="sb-deco">✦</span></h3>
-        <div class="filter-group" id="categoryFilters">
-          <button class="grade-btn active" data-category="all">全部</button>
-          <button class="grade-btn" data-category="todo">未完成</button>
-          <button class="grade-btn" data-category="doing">进行中</button>
-          <button class="grade-btn" data-category="done">已完成</button>
-        </div>
-      </section>
-
-      <section class="sb-section">
-        <h3 class="sb-heading"><span class="sb-deco">✦</span> 修仙境界筛选 <span class="sb-deco">✦</span></h3>
-        <div class="realm-list" id="realmFilters">
-          <button class="realm-item active" data-realm="all"><span class="realm-name">全部境界</span></button>
-          <button class="realm-item" data-realm="fanren"><span class="realm-name">凡人</span></button>
-          <button class="realm-item" data-realm="lianqi"><span class="realm-name">炼气</span></button>
-          <button class="realm-item" data-realm="zhuji"><span class="realm-name">筑基</span></button>
-          <button class="realm-item" data-realm="jindan"><span class="realm-name">金丹</span></button>
-          <button class="realm-item" data-realm="yuanying"><span class="realm-name">元婴+</span></button>
-        </div>
-      </section>
-    </aside>
-
-    <main class="main">
-      <section class="main-default" id="mainDefault">
-        <div class="main-header">
-          <h2 class="main-title">修炼日志</h2>
-        </div>
-
-        <div class="log-grid">
-          <article class="log-card"><h4>今日番茄钟专注总时长</h4><p id="logTodayFocus">0 分钟</p></article>
-          <article class="log-card"><h4>今日专注等级</h4><p id="logTodayLevel">炼气期专注</p></article>
-          <article class="log-card"><h4>累计灵石数量</h4><p id="logTotalStones">0</p></article>
-          <article class="log-card"><h4>今日完成待办数</h4><p id="logTodayDone">0</p></article>
-        </div>
-
-        <section class="history-card">
-          <h3 class="main-title">历史专注数据概览（近 7 日）</h3>
-          <div id="logHistory" class="log-history"></div>
-        </section>
-
-        <section class="task-section">
-          <div class="task-section-head">
-            <h3 class="main-title">历练任务</h3>
-            <button class="add-btn" id="addTaskBtn">
-              <span class="add-btn-icon">符</span>
-              <span class="add-btn-text">新增历练任务</span>
-            </button>
+  <main>
+    <section id="home" class="hero">
+      <div class="container hero-grid">
+        <div>
+          <p class="eyebrow">轻量化垂类干货教程站 · 全站中文原生内容</p>
+          <h1>VibeCoding教程</h1>
+          <p class="lead">VibeCoding零基础入门教程，聚焦VibeCoding沉浸式氛围感编程与实操完整教学，提供AI氛围感编程VibeCoding教学全套方案，贴合国内新手学习习惯。</p>
+          <div class="tag-row">
+            <span class="tag">VibeCoding沉浸式氛围感编程</span>
+            <span class="tag">VibeCoding实操完整教学</span>
+            <span class="tag">VibeCoding零基础入门教程</span>
+            <span class="tag">AI氛围感编程VibeCoding教学</span>
           </div>
-          <div class="task-list" id="taskList"></div>
-          <div class="empty-state" id="emptyState" hidden>
-            <div class="empty-scroll">📜</div>
-            <p class="empty-title">暂无历练任务</p>
-            <p class="empty-hint">低调积累，步步为营</p>
+          <div class="cta-row">
+            <a class="btn primary" href="#starter">从零开始学</a>
+            <a class="btn ghost" href="#command">一键建站指令</a>
           </div>
-        </section>
-      </section>
-    </main>
-  </div>
-
-  <div class="full-panel" id="fullPanel" hidden>
-    <div class="full-panel-hd">
-      <button class="full-panel-back" id="fullPanelBack">← 返回修炼</button>
-      <h2 class="full-panel-title" id="fullPanelTitle"></h2>
-    </div>
-    <div class="full-panel-bd" id="fullPanelBody"></div>
-  </div>
-
-  <div class="modal-overlay" id="modalOverlay" hidden>
-    <div class="modal" id="modal">
-      <div class="modal-hd">
-        <h3 class="modal-title" id="modalTitle">新增历练任务</h3>
-        <button class="modal-x" id="modalClose">✕</button>
-      </div>
-      <div class="modal-bd">
-        <div class="field">
-          <label class="field-label">历练内容</label>
-          <input class="field-input" id="taskInput" type="text" placeholder="请输入修仙任务…" maxlength="100" autocomplete="off" />
         </div>
-        <div class="field">
-          <label class="field-label">绑定番茄钟</label>
-          <select class="field-input" id="bindTypeSelect">
-            <option value="none">不绑定</option>
-            <option value="one">1 个番茄钟</option>
-            <option value="custom">自定义时长</option>
-          </select>
-        </div>
-        <div class="field" id="customMinutesWrap" hidden>
-          <label class="field-label">自定义绑定时长（分钟）</label>
-          <input class="field-input" id="customMinutesInput" type="number" min="10" max="600" value="50" />
+        <div class="hero-card">
+          <h2>建站核心适配要求</h2>
+          <ul class="checklist">
+            <li>全站中文原生内容，无外文冗余堆砌</li>
+            <li>教程分步可视化，配套实操代码片段</li>
+            <li>问题快速答疑专区，闭环导航结构</li>
+            <li>手机电脑自适应，极简清爽教程版式</li>
+            <li>低代码高效落地项目，小白零门槛上手</li>
+          </ul>
         </div>
       </div>
-      <div class="modal-ft">
-        <button class="cancel-btn" id="modalCancel">取消</button>
-        <button class="submit-btn" id="modalSubmit">保存任务</button>
+    </section>
+
+    <section class="section" id="position">
+      <div class="container">
+        <h2>网站核心建站定位</h2>
+        <p class="sub">轻量化垂类干货教程站，全站无冗余杂项内容，只做刚需实操：零基础入门VibeCoding、AI氛围感沉浸式编程实操、低代码高效落地项目、小白零门槛写可用程序。</p>
+        <ul class="checklist">
+          <li>全站适配电脑端 + 手机端，极简清爽教程版式</li>
+          <li>全程适配AI自动排版部署，内容结构可视化分步</li>
+          <li>配套实操代码片段与问题快速答疑专区</li>
+        </ul>
       </div>
-    </div>
-  </div>
+    </section>
 
-  <div class="task-menu" id="taskMenu" hidden>
-    <button id="menuEditBtn">编辑任务</button>
-    <button id="menuDeleteBtn">删除任务</button>
-  </div>
-
-  <div class="toast" id="toast"></div>
-
-  <div class="floating-pomodoro" id="floatingPomodoro">
-    <div class="pomodoro-title">🫙 闭关专注</div>
-    <div class="pomodoro-phase" id="pomoPhase">专注修炼</div>
-    <div class="pomodoro-timer" id="pomoTimer">00:00</div>
-    <div class="pomodoro-cycle" id="pomoInfo">当前 0 / 剩余 0 分钟</div>
-    <div class="pomodoro-config">
-      <label for="floatingPomoMinutesInput">时长（10-60 分钟）</label>
-      <div class="pomodoro-config-row">
-        <input id="floatingPomoMinutesInput" class="field-input" type="number" min="10" max="60" value="25" />
-        <button class="pomodoro-btn" id="floatingPomoApplyBtn">应用</button>
+    <section class="section" id="keywords">
+      <div class="container">
+        <h2>首页核心权重关键词布局</h2>
+        <p class="sub">首页SEO置顶布局，锁定VibeCoding教程核心流量。</p>
+        <div class="keyword-grid">
+          <span class="keyword">VibeCoding教程</span>
+          <span class="keyword">VibeCoding零基础入门教程</span>
+          <span class="keyword">VibeCoding沉浸式氛围感编程</span>
+          <span class="keyword">VibeCoding实操完整教学</span>
+          <span class="keyword">AI氛围感编程VibeCoding教学</span>
+        </div>
       </div>
-    </div>
-    <div class="pomodoro-actions">
-      <button class="pomodoro-btn primary" id="pomoStartBtn">开始</button>
-      <button class="pomodoro-btn" id="pomoResetBtn">重置</button>
-    </div>
-  </div>
+    </section>
 
+    <section class="section" id="starter">
+      <div class="container">
+        <h2>入门教程</h2>
+        <p class="sub">围绕新手上手流程，分步落地，配套代码片段与指令讲解。</p>
+        <div class="grid two-col">
+          <div>
+            <h3>VibeCoding基础环境搭建全套步骤</h3>
+            <div class="step-list">
+              <div class="step">
+                <span class="step-num">1</span>
+                <div>
+                  <strong>准备环境</strong>
+                  <p>确认本地编辑器与运行环境，开启中文提示与模板库。</p>
+                </div>
+              </div>
+              <div class="step">
+                <span class="step-num">2</span>
+                <div>
+                  <strong>创建学习项目</strong>
+                  <p>用可视化模板建立第一个练习项目，生成清晰目录结构。</p>
+                </div>
+              </div>
+              <div class="step">
+                <span class="step-num">3</span>
+                <div>
+                  <strong>分步跑通流程</strong>
+                  <p>演示关键配置，快速预览运行结果并同步本地修改。</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <h3>VibeCoding新手快速上手实操流程</h3>
+            <div class="step-list">
+              <div class="step">
+                <span class="step-num">1</span>
+                <div>
+                  <strong>拆解需求</strong>
+                  <p>按功能拆分为页面、数据、交互三层，让学习路径可视化。</p>
+                </div>
+              </div>
+              <div class="step">
+                <span class="step-num">2</span>
+                <div>
+                  <strong>边做边学</strong>
+                  <p>每完成一个模块就输出可见成果，提升学习反馈。</p>
+                </div>
+              </div>
+              <div class="step">
+                <span class="step-num">3</span>
+                <div>
+                  <strong>实操复盘</strong>
+                  <p>总结关键指令与排错方法，确保能独立复现。</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card spaced">
+          <h3>VibeCoding常用指令编写技巧大全</h3>
+          <p class="sub">以下示例用于展示常见指令与流程，搭配教程同步练习。</p>
+          <pre class="code-block"><code># 创建项目并进入目录
+vibe init 新手实操项目
+cd 新手实操项目
+
+# 生成页面与组件
+vibe add 页面 首页
+vibe add 组件 轮播图
+
+# 运行与检查
+vibe run
+vibe check
+vibe deploy</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="cases">
+      <div class="container">
+        <h2>实操案例</h2>
+        <p class="sub">一关键词一专题页面思路，覆盖项目搭建、调试、效率与落地。</p>
+        <div class="grid cards">
+          <article class="card">
+            <h3>VibeCoding本地项目从零搭建教程</h3>
+            <p>从目录规划到本地预览，完整走一遍可复用模板。</p>
+          </article>
+          <article class="card">
+            <h3>VibeCoding网页小程序快速开发案例</h3>
+            <p>用可视化组件快速拼出一个上线级页面与交互流程。</p>
+          </article>
+          <article class="card">
+            <h3>VibeCoding代码调试排错完整方法</h3>
+            <p>定位常见报错、日志分析与快速修复路径。</p>
+          </article>
+          <article class="card">
+            <h3>VibeCoding快捷键高效办公实操技巧</h3>
+            <p>整理高频快捷键与效率工具，提升日常开发节奏。</p>
+          </article>
+          <article class="card">
+            <h3>VibeCoding轻量化项目落地实战课</h3>
+            <p>从需求到交付的全流程实操，适配低代码高效落地。</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="faq">
+      <div class="container">
+        <h2>问题快速答疑专区</h2>
+        <p class="sub">对准真实学习痛点，沉浸式编程学习技巧分享专区。</p>
+        <div class="details-list">
+          <details>
+            <summary>零基础怎么学VibeCoding最快</summary>
+            <p>建议先跑通“环境搭建 → 模板项目 → 小功能改造”三步，保持每日15-30分钟的连续练习。</p>
+          </details>
+          <details>
+            <summary>沉浸式编程学习技巧分享专区</summary>
+            <p>采用番茄钟节奏 + 可视化清单，先实现可见成果，再补充原理与复盘。</p>
+          </details>
+          <details>
+            <summary>VibeCoding免费干货资源汇总</summary>
+            <p>包含模板库、常用组件清单、排错卡片、学习记录表等，方便快速复用。</p>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="path">
+      <div class="container">
+        <h2>学习路线</h2>
+        <p class="sub">适合零基础新手的轻量化学习路线规划。</p>
+        <div class="path-grid">
+          <div class="card">
+            <h3>VibeCoding极简学习路线规划图</h3>
+            <ol class="path-list">
+              <li>第 1 周：环境搭建 + 模板项目跑通</li>
+              <li>第 2 周：组件拼装 + 页面布局实操</li>
+              <li>第 3 周：数据接入 + 交互完善</li>
+              <li>第 4 周：项目复盘 + 作品整理输出</li>
+            </ol>
+          </div>
+          <div class="card">
+            <h3>VibeCoding免费干货资源汇总</h3>
+            <ul class="resource-list">
+              <li>入门清单：新手必备工具与模板</li>
+              <li>实操卡片：常见功能模块清单</li>
+              <li>排错手册：VibeCoding常见问题速查</li>
+              <li>学习记录：每日练习打卡表</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section highlight" id="command">
+      <div class="container">
+        <h2>AI建站直达指令</h2>
+        <p class="sub">直接复制即可用于AI建站部署。</p>
+        <div class="copy-block">
+          <pre class="code-block" data-copy-target>以VibeCoding教程为核心，按照以上分层关键词搭建轻量化干货教程官网，全站采用清爽极简版式，分首页、入门教程、实操案例、问题答疑、学习路线五大核心栏目，全部内容贴合零基础新手，分步写实操教程、搭配简易代码片段，手机电脑自适应，全程中文合规干货，无多余广告冗余内容，完整搭建可直接上线的VibeCoding教学站点。</pre>
+          <button class="btn primary" type="button" data-copy-btn>复制指令</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <p>VibeCoding教程 · 轻量化垂类干货教程站</p>
+      <p>聚焦零基础入门、沉浸式编程与实操落地，内容持续更新。</p>
+    </div>
+  </footer>
+
+  <div class="toast" id="copyToast">指令已复制</div>
   <script src="app.js"></script>
 </body>
 </html>
