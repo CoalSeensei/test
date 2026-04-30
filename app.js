@@ -21,6 +21,7 @@ function initTabs() {
       tabButtons.forEach(item => {
         item.classList.toggle('active', item === button);
         item.setAttribute('aria-selected', item === button ? 'true' : 'false');
+        item.setAttribute('tabindex', item === button ? '0' : '-1');
       });
 
       tabPanels.forEach(panel => {
@@ -68,13 +69,14 @@ function initFeedbackForm() {
   if (!form) return;
   form.addEventListener('submit', async event => {
     event.preventDefault();
+    const feedbackEmail = form.dataset.feedbackEmail || 'feedback@yourcompany.com';
     const name = document.getElementById('feedbackName')?.value.trim();
     const email = document.getElementById('feedbackEmail')?.value.trim();
     const message = document.getElementById('feedbackMessage')?.value.trim();
 
     const body = `姓名：${name || '-'}\n邮箱：${email || '-'}\n\n反馈：\n${message || '-'}`;
     const subject = encodeURIComponent('Vibecoding 教程站反馈');
-    const mailto = `mailto:hello@example.com?subject=${subject}&body=${encodeURIComponent(body)}`;
+    const mailto = `mailto:${feedbackEmail}?subject=${subject}&body=${encodeURIComponent(body)}`;
 
     try {
       await navigator.clipboard.writeText(body);

@@ -227,10 +227,10 @@
       </div>
       <div class="tabs" data-tabs>
         <div class="tab-list" role="tablist">
-          <button class="tab-button active" data-tab="qa" role="tab" aria-selected="true">任务问答</button>
-          <button class="tab-button" data-tab="templates" role="tab" aria-selected="false">模板提示词</button>
-          <button class="tab-button" data-tab="cases" role="tab" aria-selected="false">案例拆解</button>
-          <button class="tab-button" data-tab="assignments" role="tab" aria-selected="false">作业与自测</button>
+          <button class="tab-button active" data-tab="qa" role="tab" aria-selected="true" aria-controls="qa" tabindex="0">任务问答</button>
+          <button class="tab-button" data-tab="templates" role="tab" aria-selected="false" aria-controls="templates" tabindex="-1">模板提示词</button>
+          <button class="tab-button" data-tab="cases" role="tab" aria-selected="false" aria-controls="cases" tabindex="-1">案例拆解</button>
+          <button class="tab-button" data-tab="assignments" role="tab" aria-selected="false" aria-controls="assignments" tabindex="-1">作业与自测</button>
         </div>
         <div class="tab-panels">
           <div class="tab-panel active" id="qa" role="tabpanel">
@@ -401,7 +401,8 @@
         <p>留下你的问题或建议，我们会在下次迭代中回应。</p>
       </div>
       <p class="feedback-note">提交后会尝试打开邮箱客户端，同时自动复制反馈内容，便于你粘贴发送。</p>
-      <form class="feedback-form" id="feedbackForm">
+      <form class="feedback-form" id="feedbackForm" data-feedback-email="feedback@yourcompany.com">
+        <span class="field-hint" id="feedbackHint">必填字段用于整理反馈，信息仅用于教学站点改进。</span>
         <div class="form-row">
           <label>
             名称
@@ -416,7 +417,6 @@
           反馈内容
           <textarea name="message" id="feedbackMessage" rows="4" placeholder="想要改进的内容或新增模块" required aria-describedby="feedbackHint"></textarea>
         </label>
-        <span class="field-hint" id="feedbackHint">必填字段用于整理反馈，信息仅用于教学站点改进。</span>
         <button type="submit" class="primary-btn">发送反馈</button>
       </form>
     </section>
