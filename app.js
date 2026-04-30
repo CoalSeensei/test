@@ -19,9 +19,10 @@ function initTabs() {
     button.addEventListener('click', () => {
       const target = button.dataset.tab;
       tabButtons.forEach(item => {
-        item.classList.toggle('active', item === button);
-        item.setAttribute('aria-selected', item === button ? 'true' : 'false');
-        item.setAttribute('tabindex', item === button ? '0' : '-1');
+        const isActive = item.dataset.tab === target;
+        item.classList.toggle('active', isActive);
+        item.setAttribute('aria-selected', isActive ? 'true' : 'false');
+        item.setAttribute('tabindex', isActive ? '0' : '-1');
       });
 
       tabPanels.forEach(panel => {
@@ -77,6 +78,11 @@ function initFeedbackForm() {
   if (!form) return;
   form.addEventListener('submit', async event => {
     event.preventDefault();
+    if (!form.checkValidity()) {
+      form.reportValidity();
+      showToast('请先填写必填字段');
+      return;
+    }
     const feedbackUrl = form.dataset.feedbackUrl;
     const name = document.getElementById('feedbackName')?.value.trim();
     const email = document.getElementById('feedbackEmail')?.value.trim();
